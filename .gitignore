@@ -9,3 +9,5 @@ data/
 *.jsonl
 !examples/*.jsonl
 .DS_Store
+.cache/
+reports/

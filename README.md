@@ -47,6 +47,20 @@ python pipeline/export_finetune.py pairs.jsonl --out finetune.jsonl --tasks bug_
 
 OpenAI/HF-kompatibles `messages`-Format mit `system/user/assistant` pro Beispiel.
 
+## OSV / NVD Extraktion
+
+```bash
+# OSV: Ecosystem-Bulk laden und Records mit Fix-Signal extrahieren
+mkdir -p data/osv
+curl -L -o data/osv/PyPI-all.zip https://storage.googleapis.com/osv-vulnerabilities/PyPI/all.zip
+python pipeline/extract_osv.py --zip data/osv/PyPI-all.zip --ecosystem PyPI --only-with-fixes --out osv_pypi.jsonl
+
+# Commit-Patches auflösen (cacht unter .cache/patches)
+python pipeline/resolve_commits.py --in osv_pypi.jsonl --out patches.jsonl --limit 50
+```
+
+NVD ist vor allem für Metadaten/Labels (CWE, CVSS, CPE, Referenzen) nützlich; Code-Fixes kommen meist über referenzierte Commits/Advisories. Siehe `docs/datasets.md` und `TODO.md`.
+
 ## Geplante Quellen
 
 | Quelle | Typ | Link |
@@ -60,10 +74,7 @@ OpenAI/HF-kompatibles `messages`-Format mit `system/user/assistant` pro Beispiel
 
 ## Roadmap
 
-- [ ] OSV/CVE-Commit-Auflösung (`commit.patch` → buggy/fixed Paare)
-- [ ] Multi-SWE-bench Loader (C/C++, Java, JS/TS, Rust, Go)
-- [ ] Dedup, Lizenzfilter, Qualitätschecks
-- [ ] Training-Recipe (TRL/PEFT/LoRA) für ein Basis-Coding-Modell
+Siehe [TODO.md](TODO.md) für die detaillierte Planung.
 
 ## Hinweis
 
